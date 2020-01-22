@@ -1,0 +1,196 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="author" content=", "/>
+    <title>文本分类</title>
+    <!-- 3D按钮的CSS样式库 -->
+    <link rel="stylesheet" href="{% static './css/buttons.css' %}">
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
+	
+		<!-- <link rel="stylesheet" type="text/css" href="{% static './css/normalize.css' %}" /> -->
+		<!-- <link rel="stylesheet" type="text/css" href="{% static './css/demo.css' %}" /> -->
+		<!-- <link rel="stylesheet" type="text/css" href="{% static './css/cs-select.css' %}" /> -->
+		<!-- <link rel="stylesheet" type="text/css" href="{% static './css/cs-skin-border.css' %}" /> -->
+
+</head>
+
+<body>
+<!--<div class="bg" ><img src="reco/img/bg.jpg" alt=""></div>-->
+<div class="header clearfix">
+    <!--<a href=""><img src="{% static 'reco/img/logo.jpg' %}" alt=""><span class="logo">Eyecare</span></a>-->
+    <a href=""><img src="{% static './img/logo.jpg' %}" alt=""><span class="logo">NLP_ASSIGNMENT</span></a>
+    <!--<div class="left"><span class="login">login</span></div>-->
+    <!--<div class="left"><span class="login">login</span></div>-->
+</div>
+<div id="main">
+    <div id="body" class="light">
+        <div id="content" class="show">
+            <div class="demo">
+                <form id="uploadForm" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="upload_box">
+                        <div class="upload_main">
+                            <div class="upload_choose">
+                                <!-- <input id="textFile" type="file" size="30" name="fileselect[]" /> -->
+                                <!--<span id="fileDragArea" class="upload_drag_area">或者将文本粘贴拖到此处</span>-->
+                                <!--<input id="textInputArea" type="text" class="upload_drag_area" value="或者将文本粘贴拖到此处"/> -->
+								<!--<textarea id="textInputArea" class="upload_copy_area" rows="10" cols="30"/>或者将文本粘贴拖到此处</textarea>-->
+								
+								<textarea id="textInputArea" class="upload_copy_area" rows="10" cols="30" onKeyDown="textdown(event)"
+									onKeyUp="textup()" onfocus="if(value=='或者将文本粘贴拖到此处'){value=''}"
+									onblur="if (value ==''){value='或者将文本粘贴拖到此处'}"/>或者将文本粘贴拖到此处</textarea>
+                            </div>
+							<!--<fieldset>-->
+                            <!--<legend>上传文件</legend>-->
+                            <!--<input type="file" name="docfile" />-->
+                            <!--<input type="submit" value="上传"/>-->
+                            <!--</fieldset>-->
+                            <!-- <a href="http://localhost:8000/index/"
+                               class="button button-3d button-primary button-rounded">上传分析</a> 
+								<button onclick="window.location.href='http://localhost:8000/index/'"
+                                type="button" id="showSubmit" class="show_submit_btn">上传分析</button>-->
+							 <!-- <input type="submit" id="fileSubmit" class="button button-3d button-primary button-rounded" value = "上传分析" >  -->
+                            <button type="button" onclick="textSubmit()" id="fileSubmit" class="button button-3d button-primary button-rounded" >上传分析</button>
+                            <!-- <div id="share" steta="false"> -->
+							<!-- <div class="select_area">  -->
+							
+							<!-- <section> -->
+								<select class="select_area" id="modelValue">
+									<option value="FastText">FastText</option>
+									<option value="TextCNN">TextCNN</option>
+									<option value="MulBiLSTM">MulBiLSTM</option>
+									<option value="MulBiLSTM_Atten">MulBiLSTM_Atten</option>
+									<option value="RCNN">RCNN</option>
+									<option value="DPCNN">DPCNN</option>
+								</select>
+							<!-- </section> -->
+							
+								<!-- <select id="modelSelcter" class = "model_select" name="sel1"> -->
+									<!-- <option value="1">fastText</option> -->
+									<!-- <option value="2">GGGG</option>	 -->
+									<!-- <option value="3">gcn</option> -->
+								<!-- </select> -->
+							<!-- </div> -->
+
+							
+							<!-- </div> -->
+							<!--<div id="preview" class="upload_preview"></div> -->
+                        </div>
+                    </div>
+                </form>
+				
+				<div class="result_show_main">
+							<span class="result_show_text">  分析结果：</span>
+                            <div class="result_show_panel">
+                                <input id="textOutputArea" type="text" class="result_show" readonly="readonly" value="{{ result }}"/> 
+								<!--<textarea id="textInputArea" class="upload_copy_area" rows="10" cols="30" onKeyDown="textdown(event)"
+									onKeyUp="textup()" onfocus="if(value=='或者将文本粘贴拖到此处'){value=''}"
+									onblur="if (value ==''){value='或者将文本粘贴拖到此处'}"/>或者将文本粘贴拖到此处</textarea>-->
+							</div>
+				</div>
+				
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layer_footer">
+    <span>©    组名待定</span>
+    <!--<span class="dot">·</span>
+    <a target="_blank" href="">相关网站</a>
+    <span class="dot">·</span>
+    <a href="" class="footer-mobile-show">联系我们</a>-->
+    <br/>
+    <span>2019  中国科学院大学</span>
+</div>
+<script src="{% static './js/jquery.js' %}"></script>
+<!-- <script src="{% static './js/test.js' %}"></script> -->
+<!-- <script src="test.js"></script> -->
+
+<SCRIPT type="text/javascript">    
+function textdown(e) {
+    textevent = e;
+    if (textevent.keyCode == 8) {
+        return;
+    }
+    if (document.getElementById('textInputArea').value.length >= 500) {
+        alert("大侠，手下留情，此处限字500")
+        if (!document.all) {
+            textevent.preventDefault();
+        } else {
+            textevent.returnValue = false;
+        }
+    }
+}
+		function httpPost(URL, PARAMS) {
+            var temp = document.createElement("form");
+            temp.action = URL;
+            temp.method = "post";
+            temp.style.display = "none";
+ 
+            for (var x in PARAMS) {
+                var opt = document.createElement("textarea");
+                opt.name = x;
+                opt.value = PARAMS[x];
+                temp.appendChild(opt);
+            }
+            document.body.appendChild(temp);
+            temp.submit();
+ 
+            return temp;
+        }
+
+function textup() {
+    var s = document.getElementById('textInputArea').value;
+    //判断ID为text的文本区域字数是否超过100个 
+    if (s.length > 500) {
+        document.getElementById('textInputArea').value = s.substring(0, 500);
+    }
+}
+    var updateForm = document.getElementById('uploadForm');
+    function textSubmit() {
+		
+        var text = document.getElementById('textInputArea').value;
+		var model_value = document.getElementById('modelValue').value;
+		//alert(model_value);
+        //var file = document.getElementById('textFile').value;
+		//alert(file);
+		if(text.length>=3){
+		
+
+		
+		
+			//var xmlHttpRequest = new XMLHttpRequest();
+			//xmlHttpRequest.open('post', '/predict/');
+			
+			var temp = document.createElement("form");
+            temp.action = '/index/';
+            temp.method = "post";
+            temp.style.display = "none";
+			var opt = document.createElement("textarea");
+            opt.name = "text";
+            opt.value = text;
+            temp.appendChild(opt);
+			var opt2 = document.createElement("textarea");
+            opt2.name = "model";
+            opt2.value = model_value;
+            temp.appendChild(opt2);
+			document.body.appendChild(temp);
+            temp.submit();
+            return temp;
+			
+			//alert(text);
+			//xmlHttpRequest.send(formData);
+			//alert(ret);			
+		}
+		//if()
+        //if (username.length < 6 || password.length < 6) {
+        //    alert('格式不正确！');
+        //} else {
+        //    updateForm.submit();
+        //}
+    }
+</script>
+</SCRIPT>  
+</body>
+</html>

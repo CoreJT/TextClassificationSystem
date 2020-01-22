@@ -1,0 +1,8 @@
+numpy    >=1.16.2
+json    >=2.0.9
+jieba    >=0.39
+torch    >=1.1.0
+torchtext    >=0.4.0
+sklearn    >=0.20.3
+django    >=3.0.1
+fire    >=0.2.1
